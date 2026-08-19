@@ -1,0 +1,428 @@
+/******************************************************
+STUDENT NAME: Howard Lowe Jr
+Due Date: 04/16/2026
+Course: Systems Programming with C++
+Assignment: #08
+Professor: Sorgente
+Description: This is a menu driven program that manages a list 
+            of 5 miniatures, including the price of mini,
+            cost of their book, species and their legion. 
+            New object can also be added to this list.
+	    I decided to change a few of my code to try 
+	    and build new experience with help from the Sorgente's
+            videos.
+*******************************************************/
+
+#include <iostream> //cin and cout
+#include <fstream> //file input and output
+#include <string> // string class
+#include <limits> // include the header for numeric_limits
+
+using namespace std;
+
+//$$$$$$ Class Declarations and Member Implementations $$$$$$
+
+class Miniature{
+    public:
+        Miniature(); // default constructor
+        
+        // explicit value constructor:
+        Miniature(string n, string c, int i, double cost, double price);
+        
+        // mutator functions:
+        void setName(string);
+        void setSpecies(string);
+        void setLegion(int);
+        void setCost(double);
+        void setPrice(double);
+        
+        // accessor functions:
+        string getName() const;
+        string getSpecies() const;
+        int getLegion() const;
+        double getCost() const;
+        double getPrice() const;
+        
+        // member functions:
+        
+        // inputs the number of miniatures and returns the profit
+        double calculateProfit(double minis) const;
+        
+        // display name, species, legion, cost and price of a miniature object
+        void display() const;
+        
+        // overload the subtraction(-) operator
+        // calculate the difference in price of two miniatures:
+        friend double operator-(const Miniature& m1, const Miniature& m2);
+        
+        //overload the less than (<) operator
+        //compare the price of two miniatures:
+        friend bool operator<(const Miniature& m1, const Miniature& m2);
+        
+        private:
+            string name;
+            string species;
+            int legion;
+            double costperBook;
+            double priceperMini;
+        
+};
+
+// $$ Miniature Implementation $$
+Miniature::Miniature() //default constructor
+{
+    //cout <<"\nDefault miniature is empty";
+    name = "";
+    species = "";
+    legion = 0;
+    costperBook = 0.0;
+    priceperMini = 0.0;
+}
+
+// explicit value constructor
+Miniature::Miniature(string n, string c, int i, double cost, double price)
+{
+    cout << "\nExplicit value constructor";
+    name = n;
+    species = c;
+    legion = i;
+    costperBook = cost;
+    priceperMini = price;
+}
+
+// mutator functions
+void Miniature::setName(string n) {name = n;}
+void Miniature::setSpecies(string c) {species = c;}
+void Miniature::setLegion(int i) {legion = i;}
+void Miniature::setCost(double t) {costperBook = t;}
+void Miniature::setPrice(double p) {priceperMini = p;}
+
+//accessor functions
+string Miniature::getName() const {return name;}
+string Miniature::getSpecies() const {return species;}
+int Miniature::getLegion() const {return legion;}
+double Miniature::getCost() const {return costperBook;}
+double Miniature::getPrice() const {return priceperMini;}
+
+// displaying the name, species and priceperMini of a Miniature
+void Miniature:: display() const {
+    cout.setf(ios::fixed);
+    cout.setf(ios::showpoint);
+    cout.precision(2);
+    cout << legion <<" (" << name << " (" << species << ") - $" << priceperMini << " per mini" << endl;
+}
+
+// $$$$$$$$$ Programmer-Defined Function Prototypes $$$$$$$$$
+
+//load data for Miniature from the file
+void loadMiniatures(Miniature miniList[], int& count);
+
+// run the menu
+int runMenu();
+
+// processing the selection
+//input the selection, the list and the count
+void processSelection(int choice, Miniature miniList[], int& count);
+
+// display the list of miniatures
+void displayList(Miniature miniList[], int count);
+
+// add a miniature to the list with user input
+void addMini(Miniature miniList[], int count);
+
+//input 2 Miniatures by value
+// comparing the cost per book of the 2 miniatures and display the results
+// uses the overloaded(<) operator(friend function)
+void compareMini(Miniature m1, Miniature m2);
+
+//input the miniature list and the count
+//display the list have the user select a legion
+int selectMiniLegion (Miniature miniList[], int count);
+
+//input a Miniature by value
+//display the Miniature
+//get number of minis
+//calculate and display the profit
+void purchase(Miniature m1);
+
+//input miniature list, the count and selected legion
+//find the seleected miniature
+//if the legion is not found, select the first miniature on the list
+Miniature findSelectedMini(Miniature miniList[], int count, int legion);
+
+// Main function
+int main() {
+    Miniature miniList[50]; //static array size 50
+    int miniCount = 0; //number of miniatures in the list
+    
+    //load the numbers
+    loadMiniatures(miniList, miniCount);
+    cout << "The count of miniatures is " << miniCount << endl;
+    
+    int choice;
+    
+    do{
+        //run the menu
+        choice = runMenu();
+        
+        //process the choice
+        processSelection(choice, miniList, miniCount);
+        
+    }while(choice != 0);
+    
+    cout << "Thanks for using the program!" << endl;
+    return 0;
+    }
+
+
+//$$$$$$$$$ Function Definitions (After Main) $$$$$$$$$
+
+//run the menu
+int runMenu()
+{
+    int selection;
+    // print the options onto the screen
+    cout << "\nPlease, make a selection: ";
+    cout << "\n(1) add a miniature to the list";
+    cout << "\n(2) display the miniature list";
+    cout << "\n(3) compare the selling price of two miniatures";
+    cout << "\n(4) calculate the difference in the price of two miniatures";
+    cout << "\n(5) calculate the profit on a miniature purchase";
+    cout << "\n(0) Quit\n\n";
+    cin >> selection;
+    return selection;
+}   
+    //process the selection
+    // input the selection, the list and the event
+void processSelection(int choice, Miniature miniList[], int& count)
+    {
+        if (choice == 1)
+        {
+            // add a miniature to the list
+            cout << "add a miniature to the list\n";
+            addMini(miniList, count);
+            count++; // add one to count
+        }
+        
+        else if(choice == 2)
+        {
+            //display the miniature list
+            cout << "\n\ndisplay minilist \n";
+            displayList(miniList, count);
+        }
+        
+        else if(choice == 3){
+            cout << "\ncompare 2 miniatures\n";
+            //compare the cost of 2 miniatures
+            Miniature m1, m2;
+            int legion;
+            legion = selectMiniLegion(miniList, count);
+            cout << "The legion you entered was: " << legion << endl;
+            m1 = findSelectedMini(miniList, count, legion);
+            
+            legion = selectMiniLegion(miniList, count);
+            cout << "The legion you entered was: " << legion << endl;
+            m2 = findSelectedMini(miniList, count, legion);
+            compareMini(m1, m2);
+        }
+        
+        else if(choice == 4){
+            cout << "\ncompare 2 miniatures and their difference\n";
+            Miniature m1,m2;
+            int legion;
+            legion = selectMiniLegion(miniList, count);
+            cout << "The legion you entered was: " << legion << endl;
+            m1 = findSelectedMini(miniList, count, legion);
+            
+            legion = selectMiniLegion(miniList, count);
+            cout << "The legion you entered was: " << legion << endl;
+            m2 = findSelectedMini(miniList, count, legion);
+            
+            cout << "\nThe difference is $" << m1 - m2 << endl;
+        }
+        
+        else if(choice == 5){
+            cout << "\ncalculate profit\n";
+            //purchase a miniature and calculate the profit
+            Miniature m1;
+            int legion;
+            legion = selectMiniLegion(miniList, count);
+            cout << "The legion you entered was: " << legion << endl;
+            m1 = findSelectedMini(miniList, count, legion);
+            purchase(m1);
+            
+        
+        }
+        else if(choice == 0){
+            cout<<"";
+        }
+        else cout << "\nnot a valid choice";
+        }
+    
+    
+//input miniature list, the count and selected legion
+//find the seleected miniature
+//if the legion is not found, select the first miniature on the list
+Miniature findSelectedMini(Miniature miniList[], int count, int legion)
+{
+    for(int i = 0; i < count; i++)
+    {
+        if(miniList[i].getLegion() == legion)
+        {
+            cout << "found the mini: ";
+            miniList[i].display();
+            return miniList[i];
+        }
+    }
+    cout << "\n$$$$ The miniature was not found! Returning the first miniature in the list $$$$\n";
+    return miniList[0];
+}
+
+//load miniature data from the file
+//connect to the file inside the Function
+void loadMiniatures(Miniature miniList[], int& count)
+{
+    ifstream infile;
+    infile.open("Miniatures.txt");
+    int legion;
+    string name, species;
+    double cost, price;
+    
+    if(!infile) {
+        cerr << "Error opening file" << endl;
+        exit(1);
+    }
+    
+     // While loop that checks if all variables can be successfully read
+    while (!infile.eof()) {
+
+        infile >> legion >> name >> species >> cost >> price;
+
+        // Debugging output
+        cout << "\nLoaded: " << legion << ", " << name << ", " << species << ", $" << cost << ", $" << price << endl;
+
+        // Add the new Miniature object to the list
+        miniList[count].setLegion(legion);
+        miniList[count].setName(name);
+        miniList[count].setSpecies(species);
+        miniList[count].setCost(cost);
+        miniList[count].setPrice(price);
+        
+        //add the rest of the values
+        count++;
+
+    }
+
+    // Check for any errors or incomplete data
+    if (infile.eof()) {
+        cout << "\n\n*****Finished reading the file*****\n";
+    }
+    else {
+        cerr << "Error reading data from the file.\n";
+    }
+    //close the file connection
+    infile.close();
+}
+
+// add a miniature to the list with user input
+void addMini(Miniature miniList[], int count){
+    string name, species;
+    int legion;
+    double cost, price;
+    
+    cout << "Enter name: ";
+    cin.ignore(); // using this as there are two names for each character
+    getline(cin, name);
+    miniList[count].setName(name);
+    cout << "Enter species: ";
+    cin >> species;
+    miniList[count].setSpecies(species);
+    cout << "Enter legion: ";
+    cin >> legion;
+    miniList[count].setLegion(legion);
+    cout << "Enter cost: ";
+    cin >> cost;
+    miniList[count].setCost(cost);
+    cout << "Enter price: ";
+    cin >> price;
+    miniList[count].setPrice(price);
+}
+
+void displayList(Miniature miniList[], int count) {
+    cout << "\n$$$$$$$$$$$$ Displaying the Miniature list $$$$$$$$$$$$$" << endl;;
+    for(int i = 0; i < count; i++)
+    {
+        miniList[i].display(); // call the display member function
+    }
+}
+
+//input a Miniature by value
+//display the Miniature
+//get number of minis
+//calculate and display the profit
+void purchase(Miniature m1)
+{
+    cout.setf(ios::fixed);
+    cout.setf(ios::showpoint);
+    cout.precision(2);
+    
+    double miniis;
+    cout << "The miniature you selected: ";
+    m1.display();
+    cout << "Enter the purchases of miniature: ";
+    cin >> miniis;
+    double profit = m1.calculateProfit(miniis);
+    cout << "The profit will be: $" << profit << endl;
+}
+
+//input the miniature list and the count
+//display the list have the user select a legion
+int selectMiniLegion(Miniature miniList[], int count)
+{
+    int legion;
+    displayList(miniList, count);
+    cout << "Enter legion: ";
+    cin >> legion;
+    return legion;
+}
+
+//input 2 Miniatures by value
+// comparing the cost per mini of the 2 miniatures and display the results
+// uses the overloaded(<) operator(friend function)
+void compareMini(Miniature m1, Miniature m2)
+{
+    cout.setf(ios::fixed);
+    cout.setf(ios::showpoint);
+    cout.precision(2);
+    cout <<"\n comparing the selling price per mini of 2 miniatures: \n\n";
+    
+    if(m1 < m2)
+    {
+        cout  << m1.getName() << " price per mini $" << m1.getPrice() << "\n is less than";
+        cout  << m2.getName() << " price per mini $" << m2.getPrice() << endl;
+    }
+    else { cout  << m2.getName() << " price per mini $" << m2.getPrice() << "\n is less than ";
+            cout  << m1.getName() << " price per mini $" << m1.getPrice() << endl;
+    
+}
+}
+
+ // inputs the number of miniatures and returns the profit
+double Miniature::calculateProfit(double minis) const
+{
+    return (priceperMini - costperBook) * minis;
+}
+
+// overload the subtraction(-) operator
+// calculate the difference in price of two miniatures:
+double operator-(const Miniature& m1, const Miniature& m2)
+{
+    return m1.priceperMini - m2.priceperMini;
+}
+
+//overload the less than (<) operator
+//compare the price of two miniatures:
+bool operator<(const Miniature& m1, const Miniature& m2)
+{
+    return m1.priceperMini < m2.priceperMini;
+}
