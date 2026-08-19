@@ -1,0 +1,151 @@
+/******************************************************
+STUDENT NAME: Howard Lowe Jr
+Due Date: 03/31/2026
+Course: Systems Programming with C++
+Assignment: #06
+Professor: Sorgente
+Description: The program demonstrates the use of arrays along with 
+             dynamic memory, and file  input to interact with data that contain
+             194 characters - that is, using 194 win rates of certain
+             factions in 40K tournament.
+*******************************************************/
+
+#include <iostream>
+#include <string>
+#include <fstream>
+
+using namespace std;
+
+// function prototypes
+
+// fills an array of doubles from a file
+void fillArray(ifstream &in, double arr[], int count);
+
+// prints an array of doubles onto the screen
+void printArray(double arr[], int count);
+
+// declare, ask and get a value
+// count and print the number of doubles in the array
+// that are greater than the value entered
+// save the new values into an array
+// print thw array onto the screen
+void countValues(double arr[], int size);
+
+// calculates and prints the average of the elements in an array
+void calculateAverage(double arr[], int size);
+
+int main()
+{
+    int size;
+    double *arr; // declare a pointer
+    // how many (up to 194 or the number in the file)
+    
+    cout << "How many values do you want to get from the file(maximum of 194)? ";
+    cin >> size;
+    
+    while(size <= 0 || size > 194)
+    {
+        cout << "Enter values between 1 and 194: ";
+        cin >> size;
+    }
+    
+    //using new to make the array the size entered by the user 
+    arr = new double[size];
+    
+    //using ifstream to connect to the file
+    ifstream in;
+    in.open("WHwinrates.txt");
+    if (!in)
+    {
+        cout << "Error opening file." << endl;
+        delete[] arr;
+        return 1;
+    }
+    
+    fillArray(in, arr, size); // fill the array from files
+    printArray(arr, size); // print results
+    
+    // call the count values function
+    countValues(arr, size);
+    
+    // call the average values function
+    // calculateAverage(arr, size);
+    
+    // delete the array
+    delete[] arr;
+    
+    return 0;
+}
+
+// function definitions go here
+void fillArray(ifstream &in, double arr[], int count)
+{
+    for (int i = 0; i < count; i++)
+    {
+        in >> arr[i];
+    }
+}
+
+void printArray(double arr[], int count)
+{
+    int i;
+    for(i = 0; i < count; i++)
+    {
+        cout << arr[i] << endl;
+    }
+}
+
+void calculateAverage(double arr[], int size)
+{
+    double sum = 0.0;
+    for(int i = 0; i < size; i++)
+    {
+        sum += arr[i];
+    }
+    double average = sum / size;
+    cout.setf(ios::fixed);
+    cout.setf(ios::showpoint);
+    cout.precision(2);
+    cout << "\nThe average of those values is: "<< average << endl;
+}
+
+void countValues(double arr[], int size)
+{
+    double value;
+    int count = 0;
+    
+    cout << "Enter the value and I will count how many doubles in the array are greater than that value: ";
+    cin >> value;
+    
+    // count how many are greater
+    for(int i = 0; i < size; i++)
+    {
+        if (arr[i] > value)
+        {
+            cout << "The array value is: " << arr[i] << " index is " << i << endl;
+            count++;
+        }
+    }
+    if(count > 0)
+    {
+        // creating a second entry
+        double *greater = new double[count];
+        int great = 0;
+        
+        for(int i = 0; i < size; i++ )
+        {
+            if (arr[i] > value)
+            {
+                greater[great] = arr[i];
+                great++;
+                
+            }
+        }
+        cout << "There are " << count << " in the array greater than " << value <<"." << endl;
+        cout << "Here is a list of the values: "<< endl;
+        
+        printArray(greater, count);
+        calculateAverage(greater, count);
+        delete[] greater;
+    }
+}
