@@ -1,0 +1,168 @@
+/******************************************************
+STUDENT NAME: Howard Lowe Jr
+Due Date: 03/02/2026
+Course: Systems Programming with C++
+Assignment: #04
+Professor: Sorgente
+Description: This program performs an explicit value constructor,
+             accessor, and mutator member functions for each
+             private member variable to show results for four
+             miniatures; two initialized with deafult
+             constructor and two entered by user using mutator functions.
+*******************************************************/
+
+
+#include <string> // always included when using the string data type
+#include <iostream> // the standard library for i/o
+using namespace std; 
+
+class Miniature
+{
+    public:
+           Miniature(); // Miniature is the default constructor
+           Miniature(string, string, string, int, double);
+           
+           //mutator functions
+           void SetName(string);
+           void SetOrigin(string);
+           void SetLegion(string);
+           void SetLid(int);
+           void SetPrice(double);
+           
+           //accessor functions
+           string GetName()const;
+           string GetOrigin()const;
+           string GetLegion()const;
+           int GetLid()const;
+           double GetPrice()const;
+           
+    
+    private:
+    
+           string name, origin, legion;
+           int lid;
+           double price;
+           
+};
+
+// Members functions follows below:
+
+Miniature::Miniature() // this is the default constructor
+{
+    cout << "\ndefault Miniature is Roboute Guilliman";
+    name = "Roboute Guilliman";
+    origin = "Ultramar";
+    legion = "Ultramarines";
+    lid = 13;
+    price = 73.50;
+    
+    
+}
+
+// explicit value  constructor follows below:
+Miniature::Miniature(string n, string o, string le, int li, double p)
+{
+    cout << "\nExplicit value constructor";
+    
+    name = n;
+    origin = o;
+    legion = le;
+    lid = li;
+    price = p;
+}
+
+// five mutator functions will follow below:
+void Miniature::SetName(string n) { name = n; } 
+void Miniature::SetOrigin(string o) { origin = o; }
+void Miniature::SetLegion(string le) { legion = le; }
+void Miniature::SetLid(int li) { lid = li; }  
+void Miniature::SetPrice(double p) { price = p; }
+
+//five accessor functions will follow below:
+string Miniature::GetName()const { return name; }
+string Miniature::GetOrigin()const { return origin; }
+string Miniature::GetLegion()const { return legion; }
+int Miniature::GetLid()const { return lid; }
+double Miniature::GetPrice()const { return price; }
+
+//programmer function prototypes
+// including one miniature by reference:
+// getting the informatiom for one vegetable with user input
+void GetMiniatureInfo(Miniature& vtb);
+
+//input: one const vegetable by reference
+//prints the information about a veggie onto the screen
+void PrintMiniatureInfo(const Miniature& vtb);
+
+int main()
+{
+    // declaring 4 objects
+    Miniature m1("Lion El Jonsson", "Caliban", "Dark Angels", 1, 73.50 );
+    Miniature m2, m3, m4;
+    
+    //use GetMiniatureInfo to fill m3 and m4
+    GetMiniatureInfo(m3);
+    GetMiniatureInfo(m4);
+    
+    // Printing info for all 4 miniatures
+    PrintMiniatureInfo(m1);
+    PrintMiniatureInfo(m2);
+    PrintMiniatureInfo(m3);
+    PrintMiniatureInfo(m4);
+    
+    return 0;
+}
+
+//get the info for one miniature with user input
+// prompting user for input one by one
+void GetMiniatureInfo(Miniature& vtb){
+    string nameInput, originInput, legionInput;
+    int lidInput;
+    double priceInput;
+    
+    cout << "\n\n #######Getting Information from the User#######\n\n";
+
+    cout << "Enter the miniature's name: \n";
+    getline(cin, nameInput);
+    
+    
+    cout << "Enter the miniature's origin: \n";
+    getline(cin, originInput);
+    
+    
+    cout << "Enter the miniature's legion: \n";
+    getline(cin, legionInput);
+   
+    
+    cout << "Enter the Identification Number of the Legion: \n";
+    cin >> lidInput;
+    
+    cout << "Enter the price of the miniature: \n";
+    cin >> priceInput;
+    
+    cin.ignore();
+    //using mutators to store results into objects
+    vtb.SetName(nameInput);
+    vtb.SetOrigin(originInput);
+    vtb.SetLegion(legionInput);
+    vtb.SetLid(lidInput);
+    vtb.SetPrice(priceInput);
+    
+}
+
+//prints the info about a miniature onto the screen
+void PrintMiniatureInfo(const Miniature& vtb)
+{
+    cout.setf(ios::fixed);
+    cout.setf(ios::showpoint); // always used the code when necessary
+    cout.precision(2);        // to set the number of decimal places for doubles
+    
+    cout << "\n\n$$$$$$$Printing the Information of the Miniatures$$$$$$\n\n";
+    
+    cout << "Miniature Name: " << vtb.GetName() << endl;
+    cout << "Miniature Origin: " << vtb.GetOrigin() << endl;
+    cout << "Miniature Legion: " << vtb.GetLegion() << endl;
+    cout << "Miniature Legion ID: " << vtb.GetLid() << endl;
+    cout << "Miniature Price: " << vtb.GetPrice() << endl;
+}
+
