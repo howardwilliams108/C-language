@@ -1,0 +1,15 @@
+Roboute_Guilliman
+Primarch
+Ultramarine
+13
+73.50
+Lion_El_Jonson
+Primarch
+Dark_Angels
+1
+73.50
+Luis_Dante
+Chapter Master
+Blood_Angels
+9
+48.00

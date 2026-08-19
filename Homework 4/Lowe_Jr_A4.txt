@@ -1,0 +1,78 @@
+/******************************************************
+STUDENT NAME: Howard Lowe Jr
+Due Date: 02/23/2026
+Course: Systems Programming with C++
+Assignment: #04
+Professor: Sorgente
+
+Description: This program uses defined structs and file inputs to manage 
+            instances of the object known as Miniature, reading the data 
+            from miniatureInput.txt and printing the results onto the screen.
+
+*****************************************************/
+using namespace std;
+#include <iostream> // standard library for i/o
+#include <string>
+#include <fstream> // file IO streams
+
+struct Miniature {
+    string name, origin, legion;
+    int lid;
+    double price;
+};
+
+//input one miniature by reference and file stream by reference
+//this will get info for one miniature from the file
+void GetMiniatureInfo(Miniature& vtb, ifstream &fin);
+
+//input: one const screen by reference
+//prints the info about a miniature onto the screen
+void PrintMiniatureInfo(const Miniature& vtb);
+
+int main()
+{   
+    Miniature m1, m2, m3;
+    ifstream fin("miniatureInput.txt");
+    if (fin.fail())
+             //if the program does not get the file
+             cout << "Input file text did not open correctly." << endl;
+    else
+    {
+        // getting the information
+        GetMiniatureInfo(m1, fin);
+        //print the information
+        PrintMiniatureInfo(m1);
+        
+        GetMiniatureInfo(m2, fin);
+        PrintMiniatureInfo(m2);
+        
+        GetMiniatureInfo(m3, fin);
+        PrintMiniatureInfo(m3);
+    }
+    fin.close();
+    return 0;
+}
+
+void GetMiniatureInfo(Miniature& vtb, ifstream &fin)
+{
+    getline(fin, vtb.name); // I use the getline() function to read a line of text,
+    getline(fin, vtb.origin); // takin cin as the first parameter and string variable 
+    getline(fin, vtb.legion); // as second.
+    fin >> vtb.lid >> vtb.price;
+    fin.ignore(); //I decided to use information I learned from w3schools for this project
+                  //This will discard extra or newline characters left over by cin.
+}                 //The program works properly now as without it, result will be blank.
+
+
+void PrintMiniatureInfo(const Miniature& vtb)
+{ 
+    cout.setf(ios::fixed);
+    cout.setf(ios::showpoint);
+    cout.precision(2);
+    cout << "############## Printing Miniature Information#############" << endl;
+    cout << "Name: " << vtb.name << endl; // outputs name
+    cout << "Origin: " << vtb.origin << endl; // outputs the species
+    cout << "Legion: " << vtb.legion << endl; // outputs the Space Marine Legion
+    cout << "Legion ID: " << vtb.lid << endl; // outputs the code number
+    cout << "Price: $" << vtb.price << endl << endl; // outputs the price of the miniature
+}
