@@ -1,0 +1,191 @@
+/***********************************************************
+STUDENT NAME: Howard Lowe Jr
+Due Date:4/30/2026
+Course:  C0P3275C
+Assignment: 10
+Professor: Sorgente
+
+Description:This program demonstrates use of C++ classes, including mutators/accesor functions,
+            deconstructors overrice visual functions, and inheritance to create  
+            the following class hierarchy for vehicles with this program using
+            a dirtbike and additional vehicle that is the watercraft.
+
+*******************************************************************************/
+
+#include <iostream>
+#include <string>
+using namespace std;
+
+
+// ----------- CLASS ActionVehicle DECLARATION -----------
+
+
+class ActionVehicle {
+
+public:
+    	//default constructor
+    	ActionVehicle();
+	    //explicit value constructor
+	    ActionVehicle(string, int);
+	    
+    	virtual void showInfo(); //virtual function
+    	virtual ~ActionVehicle();//destructor
+
+    	//accessor and mutator functions
+    	string GetBrand();
+    	int GetCC();
+
+    	void SetBrand(string);
+    	void SetCC(int);
+
+private:
+    	string brand; // 2 private member variables
+    	int engineCC;
+};
+
+
+// ----------- CLASS ActionVehicle IMPLEMENTATION -----------
+
+//default constructor
+ActionVehicle::ActionVehicle() {
+    	brand = "Generic";
+    	engineCC = 000;
+}
+
+//explicit value constructor
+ActionVehicle::ActionVehicle(string b, int cc)
+    	: brand(b), engineCC(cc) {}
+
+//accessor and mutator functions
+string ActionVehicle::GetBrand() { return brand; }
+int ActionVehicle::GetCC() { return engineCC; }
+void ActionVehicle::SetBrand(string b) { brand = b; }
+void ActionVehicle::SetCC(int cc) { engineCC = cc; }
+
+
+//showInfo implementation
+void ActionVehicle::showInfo() {
+    	cout << "\n------Action Vehicle showInfo---------\n"
+        	<< "Brand: " << brand
+        	<< ", Engine: " << engineCC << "cc" << endl;
+
+}
+
+//deconstructor
+ActionVehicle::~ActionVehicle() {}
+
+// ----------- CLASS Dirtbike DECLARATION -----------
+
+class DirtBike : public ActionVehicle {
+
+public:
+
+    	//explicit value constructor
+    	DirtBike(string b, int cc, string tire, string start);
+
+    	//add accessor and mutator functions
+        string GetStart();
+        string GetTire();
+        
+        void SetStart(string);
+        void SetTire(string);
+        
+        
+    	//override virtual function
+    	void showInfo() override;
+
+private:
+    	string Tire;
+    	string Start; //electric or kick start
+};
+
+// ----------- CLASS Dirtbike IMPLEMENTATION -----------
+
+DirtBike::DirtBike(string b, int cc, string tire, string start)
+    	: ActionVehicle(b, cc),
+    	Tire(tire), Start(start) {}
+    	
+// accessor and mutator functions
+string DirtBike::GetStart() {return Start;}
+string DirtBike::GetTire() { return Tire;}
+
+void DirtBike::SetStart(string start) { Start = start; }
+void DirtBike::SetTire(string tire) { Tire = tire; }
+
+void DirtBike::showInfo() {
+    	ActionVehicle::showInfo();
+    	cout << "Tire Type: " << Tire
+        	<< ", Start Method: " << Start << endl;
+}
+
+
+
+
+
+// -----------  second derived CLASS DECLARATION (additional vehicle) -----------
+class Watercraft: public ActionVehicle {
+    //explicit value constructor
+    public :
+        Watercraft(string b, int cc, string tire, string start, int seats, string driver);
+    
+    //accessor and mutator functions
+    string GetStart();
+    string GetTire();
+    string GetDriver();
+    int GetSeats();
+    void SetStart(string);
+    void SetTire(string);
+    void SetDriver(string);
+    void SetSeats(int);
+    
+    // override virtual function
+    void showInfo() override;
+    
+    private:
+        string Tire;
+        string Start;
+        string Driver;
+        int Seats;
+        
+};
+
+
+// -----------  second derived CLASS IMPLEMENTATION (additional vehicle) -----------
+Watercraft::Watercraft(string b, int cc, string tire, string start, int seats, string driver)
+        :ActionVehicle(b, cc), Tire(tire), Start(start), Seats(seats), Driver(driver) {}
+
+string Watercraft::GetStart() {return Start;}
+string Watercraft::GetTire() {return Tire;}
+int Watercraft::GetSeats() {return Seats;}
+string Watercraft::GetDriver() {return Driver;}
+void Watercraft::SetStart(string start) {Start = start;}
+void Watercraft::SetTire(string tire) {Tire = tire;}
+void Watercraft::SetSeats (int seats) {Seats = seats;}
+void Watercraft::SetDriver (string driver) {Driver = driver;}
+
+void Watercraft::showInfo() {
+    ActionVehicle::showInfo();
+    cout << "Tire Type: " << Tire << ", Start Method: " << Start
+         << ", Number of Seats: " << Seats
+         << ", Driver: " << Driver << endl;
+}
+
+// ----------- MAIN FUNCTION -----------
+//
+
+int main() {
+    	//declare 3 objects and call the showInfo function
+    	ActionVehicle A1; //default constructor
+
+    	//explicit value constructors for Dirtbike
+    	DirtBike bike("KTM", 250, "knobby", "kick");
+
+	//explicit value constructors for Additional vehicle 
+	Watercraft additionalVehicle("Metro", 350, "great", "knob", 12, "Derrick");
+
+    	A1.showInfo(); // this will output the specific information for all vehicles
+    	bike.showInfo();
+    	additionalVehicle.showInfo(); 
+
+    return 0;
+}
