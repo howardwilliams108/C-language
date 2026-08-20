@@ -1,0 +1,169 @@
+/******************************************************
+STUDENT NAME: Howard Lowe Jr
+Due Date: 04/25/2026
+Course: Systems Programming with C++
+Assignment: #09 Part 2
+Professor: Sorgente
+Description: The program demonstrates the use of vectors along with 
+             sorting, counting, and file input to interact with data that contain
+             194 characters - that is, using 194 win rates of certain
+             factions in 40K tournament.
+*******************************************************/
+
+#include <iostream>
+#include <fstream>
+#include <algorithm>
+#include <vector>
+
+using namespace std;
+
+// function prototypes
+
+//input: an opened file stream, a vector by reference,
+//the number of doubles to get from the file
+//fills a vector of doubles from a file
+//vectors are not automatically passed by reference like an array
+void fillVector(ifstream& in, vector<double>& bitValues, int count);
+//input: a vector by value
+//prints a vector of doubles onto the screen
+//makes a copy of the vector pass by value
+void printVector(vector<double> bitValues);
+//input: a vector by value
+//sorts a vector of doubles in ascending order
+//makes a copy of the vector pass by value
+void sortVector(vector<double> bitValues);
+
+//declare, ask and get a value
+//count and print the number of doubles in the vector
+//that are greater than the value entered
+//save the new values into a new vector
+//print the new vector onto the screen
+void countValues(vector<double> bitValues);
+
+//calculates and prints the average of the elements in a vector
+void calculateAverage(vector<double>greaterValues);
+
+int main()
+{
+    int count;
+    vector<double>bitValues; // declare a pointer
+    // how many (up to 194 or the number in the file)
+    
+    cout << "How many values do you want to get from the file(maximum of 194)? ";
+    cin >> count;
+    
+    while(count <= 0 || count > 194)
+    {
+        cout << "Enter values between 1 and 194: ";
+        cin >> count;
+    }
+    
+    
+    
+    
+    //using ifstream to connect to the file
+    ifstream in;
+    in.open("WHwinrates.txt");
+    if (!in)
+    {
+        cout << "Error opening file." << endl;
+        return 1;
+    }
+    
+    fillVector(in, bitValues, count); // fill the array from files
+    printVector(bitValues); // print results
+    sortVector(bitValues);
+    
+    // call the count values function
+    countValues(bitValues);
+    
+    in.close(); // close file connection
+    
+    
+    
+    return 0;
+}
+
+// function definitions go here
+
+//fills a vector of doubles from a file
+//vectors are not automatically passed by reference 
+void fillVector(ifstream &in, vector<double>& bitValues , int count)
+{
+    double value;
+    
+    for (int i = 0; i < count; i++)
+    {
+        in >> value;
+        bitValues.push_back(value);
+    }
+}
+
+//prints a vector of doubles onto the screen
+// makes a copy of the vector pass by value
+void printVector(vector<double> bitValues)
+{
+    int i;
+    for(i = 0; i < bitValues.size(); i++)
+    {
+        cout << bitValues[i] << endl;
+    }
+}
+
+//sorts a vector of doubles in ascending order
+//make a copy of the vector pass by value
+void sortVector(vector<double> bitValues)
+{
+    sort(bitValues.begin(), bitValues.end());
+    cout << "\n\nprinting the sorted vector: ";
+    printVector(bitValues);
+}    
+
+//calculates & prints the average of the elements in a vector
+void calculateAverage(vector<double>greaterValues)
+{
+    double sum = 0.0;
+    for(int i = 0; i < greaterValues.size(); i++)
+    {
+        sum += greaterValues[i];
+    }
+    double average = sum / greaterValues.size();
+    cout.setf(ios::fixed);
+    cout.setf(ios::showpoint);
+    cout.precision(2);
+    cout << "\nThe average of those values is: "<< average << endl;
+}
+
+//declare, ask and get a value
+//count and print the number of doubles in the vector
+//that are greater than the value entered
+//save the new values into a new vector
+//print the new vector onto the screen
+void countValues(vector<double> bitValues)
+{
+    double value;
+    
+    
+    cout << "Enter the value and I will count how many doubles in the array are greater than that value: ";
+    cin >> value;
+    vector<double>greaterValues;
+    
+    // count how many are greater
+    for(int i = 0; i < bitValues.size(); i++)
+    {
+        if (bitValues[i] > value)
+        {
+            cout << "The  value is: " << bitValues[i] << " index is " << i << endl;
+            greaterValues.push_back(bitValues[i]);
+        }
+    }
+    
+        
+        cout << "There are " << greaterValues.size() << " in the array greater than " << value <<"." << endl;
+        cout << "Here is a list of the values: "<< endl;
+        
+        printVector(greaterValues);
+        calculateAverage(greaterValues);
+        
+    
+}

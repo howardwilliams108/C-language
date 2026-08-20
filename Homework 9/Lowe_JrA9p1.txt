@@ -1,0 +1,134 @@
+/******************************************************
+STUDENT NAME: Howard Lowe Jr
+Due Date: 04/27/2026
+Course: Systems Programming with C++
+Assignment: #09 Part 1
+Professor: Sorgente
+Description: The program demonstrates the use of C++ strings, vectors,
+            and reverse function(#include<algorithm>) to read in a phrase
+            and reverse the phrase.
+*******************************************************/
+
+#include <algorithm> //reverse function
+#include <iostream>
+#include <string>
+#include <vector>
+using namespace std;
+
+//input a string phrase and a string rector by reference
+//separates a phrase into words and stores each word in a string vector
+void separatePhrase(const string& phrase, vector<string>& words);
+
+//input a vector of words (by value), create a new phrase in reverse
+//return the new phrase
+string reversePhrase(vector<string> reverseWords);
+
+int main()
+{
+    string word;
+    string reversedWord;
+    
+    cout << "Enter a word: ";
+    cin >> word;
+    
+    reversedWord = word;
+    reverse(reversedWord.begin(),reversedWord.end()); // reverses the words/phrases
+    
+    cout << "\nOriginal word: " << word << endl;
+    cout << "Reversed word: " << reversedWord << endl; 
+    
+    cin.ignore();
+    
+    // declaring 2 strings for phrases
+    string phrase;
+    string reversedPhrase;
+    
+    //ask and get a phrase
+    cout << "\nHello! Can i get a phrase please? ";
+    
+    
+    //string class getline
+    
+    getline(cin, phrase);
+
+    
+    //make a copy of the phrase
+    reversedPhrase = phrase;
+    
+    //"reverse the phrase copy(reverse all words)"
+    reverse(reversedPhrase.begin(),reversedPhrase.end());
+    
+    //print both onto the screen
+    cout << "\nOriginal phrase: " << phrase;
+    cout << "\nReversed phrase: " << reversedPhrase;
+    
+    //declare a string vector to hold all the words
+    vector<string>words; //empty
+    
+    //use your own function to separate the words in the phase
+    separatePhrase(phrase, words);
+    
+    //print the words in a column to test (use a loop)
+    cout << "\n\n----------------------------\n";
+    cout <<"\n(words in the vector):\n\n";
+    
+    for (int i =0; i < words.size(); i++)
+    { 
+        cout << words[i] << endl;
+    }    
+    
+    //use your own function to reverse the phrase (Each word should reamin intact)
+    string reverseIt = reversePhrase(words);
+    
+    //print the reversed phrase
+    cout <<"\nThe reversed phrase is: " << reverseIt << endl; 
+    
+    return 0;
+    }
+    
+//separates a phrase into words and stores each word in a string vector
+void separatePhrase(const string& phrase, vector<string>& words)
+{
+    string currentWord; //hold the characters for the current word
+    for (unsigned int i = 0; i < phrase.size(); i++)
+    {
+        if (phrase[i] != ' ')//not a space it will be a character in the word
+        {
+        //add the character to the current word
+        currentWord += phrase[i];
+        }
+        else //a space has been found, the end of the word
+        {
+        //add the word to the vector use push_back
+        words.push_back(currentWord);
+        
+        //clear the current word
+        currentWord.clear();
+        }
+    }
+    if (!currentWord.empty())//get the last word
+    {
+        //add the word to the vector use push_back
+        words.push_back(currentWord);
+    }
+}
+//input a vector of words, create a new phrase in reverse
+string reversePhrase(vector<string> reverseWords)
+{
+    string reversed;
+    while (!reverseWords.empty())
+    {
+        //get the last word
+        reversed += reverseWords.back();
+        
+        //remove it from the vector
+        reverseWords.pop_back();
+        
+        //add a space
+        reversed += " ";
+    }
+    //return the phrase
+    return reversed;
+}
+
+
